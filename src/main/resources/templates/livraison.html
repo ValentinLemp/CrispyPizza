@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Livraison</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="page-construction">
+    <h1>Livraison</h1>
+    <p>Page en construction...</p>
+</div>
+
+<style>
+    .page-construction {
+        padding-top: 150px;
+        text-align: center;
+        color: var(--pizza-white);
+    }
+    .page-construction h1 {
+        color: var(--pizza-yellow);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .page-construction p {
+        color: var(--pizza-gray);
+        font-size: 1.2rem;
+    }
+</style>
+
+</body>
+</html>

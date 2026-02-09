@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Paiement réussi</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="payment-container">
+    <div class="payment-card success">
+        <div class="payment-icon">✓</div>
+        <h1>Paiement réussi !</h1>
+        <p>Merci pour votre commande.</p>
+        <a href="/home" class="btn-home">Retour à l'accueil</a>
+    </div>
+</div>
+
+<script>
+    // Vider le panier après paiement réussi
+    sessionStorage.removeItem('panier');
+    sessionStorage.removeItem('panierTotal');
+</script>
+
+<style>
+    .payment-container {
+        padding-top: 150px;
+        padding-bottom: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+
+    .payment-card {
+        background: var(--pizza-black);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        max-width: 500px;
+        border: 2px solid var(--pizza-yellow);
+    }
+
+    .payment-card.success .payment-icon {
+        width: 80px;
+        height: 80px;
+        background: #4CAF50;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .payment-card h1 {
+        color: var(--pizza-yellow);
+        margin-bottom: 1rem;
+    }
+
+    .payment-card p {
+        color: var(--pizza-white);
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-home {
+        display: inline-block;
+        margin-top: 2rem;
+        background: linear-gradient(135deg, var(--pizza-yellow), var(--pizza-yellow-dark));
+        color: var(--pizza-black);
+        text-decoration: none;
+        padding: 0.8rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(242, 183, 5, 0.4);
+    }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+/* Commande Page */
+.commande-container {
+    padding-top: 120px;
+    padding-bottom: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.commande-title {
+    color: var(--pizza-yellow);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.commande-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Formulaire */
+.commande-form-section {
+    background: var(--pizza-black);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid var(--pizza-gray);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    color: var(--pizza-white);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group .required {
+    color: var(--pizza-red);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--pizza-gray-dark);
+    border: 1px solid var(--pizza-gray);
+    border-radius: 10px;
+    color: var(--pizza-white);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--pizza-yellow);
+    box-shadow: 0 0 0 2px rgba(242, 183, 5, 0.2);
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23F2B705' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+.form-group select option {
+    background: var(--pizza-gray-dark);
+    color: var(--pizza-white);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--pizza-gray);
+}
+
+/* Récapitulatif */
+.commande-recap-section {
+    position: sticky;
+    top: 100px;
+}
+
+.recap-card {
+    background: var(--pizza-black);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 2px solid var(--pizza-yellow);
+}
+
+.recap-title {
+    color: var(--pizza-yellow);
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Promo 10 plats */
+.recap-promo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(76, 175, 80, 0.15);
+    border: 1px solid #4CAF50;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.recap-promo-label {
+    color: #4CAF50;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.recap-promo-reduction {
+    color: #4CAF50;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.recap-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid var(--pizza-gray);
+    border-bottom: 1px solid var(--pizza-gray);
+    margin-bottom: 1.5rem;
+}
+
+.recap-total-label {
+    color: var(--pizza-white);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.recap-total-prix {
+    color: var(--pizza-yellow);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.btn-payer {
+    width: 100%;
+    background: linear-gradient(135deg, var(--pizza-yellow), var(--pizza-yellow-dark));
+    border: none;
+    color: var(--pizza-black);
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-payer:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(242, 183, 5, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .commande-content {
+        grid-template-columns: 1fr;
+    }
+
+    .commande-recap-section {
+        position: static;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

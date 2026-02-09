@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Finaliser la commande</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/commande.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="commande-container">
+    <h1 class="commande-title">Finaliser la commande</h1>
+
+    <div class="commande-content">
+        <!-- Formulaire à gauche -->
+        <div class="commande-form-section">
+            <form id="commande-form">
+                <div class="form-group">
+                    <label for="restaurant">Restaurant <span class="required">*</span></label>
+                    <select id="restaurant" name="restaurant" required>
+                        <option value="">-- Sélectionner un restaurant --</option>
+                        <option value="1">Ramillies</option>
+                        <option value="2">Meux</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom <span class="required">*</span></label>
+                        <input type="text" id="nom" name="nom" required minlength="2" maxlength="25" pattern="[A-Za-zÀ-ÿ\s\-']{2,25}">
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom <span class="required">*</span></label>
+                        <input type="text" id="prenom" name="prenom" required maxlength="25" pattern="[A-Za-zÀ-ÿ\s\-']{1,25}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero">Numéro de téléphone <span class="required">*</span></label>
+                    <input type="tel" id="numero" name="numero" required maxlength="15" pattern="[0-9]{10}" placeholder="ex: 0482345678">
+                </div>
+
+                <div class="form-group">
+                    <label for="heure">Heure de retrait</label>
+                    <select id="heure" name="heure">
+                        <option value="">--  --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="commentaire">Commentaire</label>
+                    <textarea id="commentaire" name="commentaire" rows="3" maxlength="255" placeholder="Instructions spéciales..."></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Récapitulatif à droite -->
+        <div class="commande-recap-section">
+            <div class="recap-card">
+                <h2 class="recap-title">Récapitulatif</h2>
+
+                <div id="recap-promo" class="recap-promo" style="display: none;">
+                    <span class="recap-promo-label">Promo 10 plats</span>
+                    <span class="recap-promo-reduction">-12€</span>
+                </div>
+                <div class="recap-total">
+                    <span class="recap-total-label">Total</span>
+                    <span class="recap-total-prix" id="recap-total">0.00 €</span>
+                </div>
+
+                <button type="button" class="btn-payer" id="btn-payer">Payer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Horaires d'ouverture
+    const horaires = {
+        0: [{ ouverture: '18:00', fermeture: '21:00' }],  // Dimanche - soir uniquement
+        1: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Lundi
+        2: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mardi
+        3: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mercredi
+        4: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Jeudi
+        5: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Vendredi
+        6: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }]   // Samedi
+    };
+
+    // Générer les options d'heure basées sur les horaires d'ouverture du jour
+    function genererOptionsHeure() {
+        const selectHeure = document.getElementById('heure');
+        const now = new Date();
+        const jour = now.getDay();
+        const creneaux = horaires[jour];
+        const heureActuelle = now.getHours() * 60 + now.getMinutes();
+
+        if (!creneaux || creneaux.length === 0) return;
+
+        // Trouver le créneau actuel ou le prochain
+        for (let i = 0; i < creneaux.length; i++) {
+            const creneau = creneaux[i];
+            const [hOuv, mOuv] = creneau.ouverture.split(':').map(Number);
+            const [hFerm, mFerm] = creneau.fermeture.split(':').map(Number);
+
+            const heureOuverture = hOuv * 60 + mOuv;
+            const heureFermeture = hFerm * 60 + mFerm;
+
+            // Ignorer les créneaux déjà terminés
+            if (heureActuelle > heureFermeture) {
+                continue;
+            }
+
+            // On est dans ce créneau ou c'est le prochain
+            let heureDebut = heureOuverture;
+
+            // Ne pas afficher les heures passées
+            if (heureDebut < heureActuelle) {
+                heureDebut = Math.ceil(heureActuelle / 5) * 5;
+            }
+
+            for (let minutes = heureDebut; minutes <= heureFermeture; minutes += 5) {
+                const h = Math.floor(minutes / 60);
+                const m = minutes % 60;
+                const heureStr = h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0');
+
+                const option = document.createElement('option');
+                option.value = heureStr;
+                option.textContent = heureStr;
+                selectHeure.appendChild(option);
+            }
+
+            // On affiche seulement le créneau actuel/prochain, pas les suivants
+            break;
+        }
+    }
+
+    // Récupérer le total du panier depuis sessionStorage
+    function afficherTotal() {
+        const total = sessionStorage.getItem('panierTotal') || '0.00';
+        document.getElementById('recap-total').textContent = total + ' €';
+
+        // Afficher la promo si active
+        const promoActif = sessionStorage.getItem('promoPlatsActif') === 'true';
+        const promoDiv = document.getElementById('recap-promo');
+        if (promoActif) {
+            promoDiv.style.display = 'flex';
+        } else {
+            promoDiv.style.display = 'none';
+        }
+    }
+
+    // Vérifier le formulaire et payer
+    function validerEtPayer() {
+        const nom = document.getElementById('nom').value.trim();
+        const prenom = document.getElementById('prenom').value.trim();
+        const numero = document.getElementById('numero').value.trim();
+        const restaurant = document.getElementById('restaurant').value;
+        const heure = document.getElementById('heure').value || null;
+        const commentaire = document.getElementById('commentaire').value.trim();
+
+        if (!restaurant) {
+            alert('Veuillez sélectionner un restaurant.');
+            return;
+        }
+
+        if (!nom || !prenom) {
+            alert('Veuillez remplir le nom et le prénom.');
+            return;
+        }
+
+        if (!numero || !/^[0-9]{10}$/.test(numero)) {
+            alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
+            return;
+        }
+
+        // Vérifier si l'heure sélectionnée n'est pas passée
+        if (heure) {
+            const now = new Date();
+            const heureActuelle = now.getHours() * 60 + now.getMinutes();
+            const [h, m] = heure.split(':').map(Number);
+            const heureSelectionnee = h * 60 + m;
+
+            if (heureSelectionnee < heureActuelle) {
+                alert('L\'heure sélectionnée est déjà passée. Veuillez en choisir une autre.');
+                return;
+            }
+        }
+
+        const panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+        if (panier.length === 0) {
+            alert('Votre panier est vide.');
+            return;
+        }
+
+        // Récupérer le total
+        const total = sessionStorage.getItem('panierTotal') || '0.00';
+
+        // Données pour le paiement
+        const paymentData = {
+            nom: nom,
+            prenom: prenom,
+            numero: numero,
+            restaurant: restaurant,
+            heure: heure,
+            commentaire: commentaire || null,
+            total: total,
+            articles: panier
+        };
+
+        // Appeler l'API de paiement
+        fetch('/api/payment/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.checkoutUrl) {
+                // Rediriger vers la page de paiement Mollie
+                window.location.href = data.checkoutUrl;
+            } else if (data.error) {
+                alert('Erreur: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de la création du paiement.');
+        });
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        genererOptionsHeure();
+        afficherTotal();
+
+        document.getElementById('btn-payer').addEventListener('click', validerEtPayer);
+    });
+</script>
+
+</body>
+</html>

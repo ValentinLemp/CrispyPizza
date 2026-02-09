@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Pizzeria Italienne</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<!-- Section Hero -->
+<section id="hero" class="hero">
+    <div class="logo">
+        <h1>CRISPY</h1>
+        <img th:src="@{/images/logo.jpg}" alt="CrispyPizza Logo">
+        <span>Pizza</span>
+    </div>
+    <div class="hero-content">
+        <h2>Bienvenue!</h2>
+        <p>Savourez l'authenticité de la cuisine italienne avec nos pizzas croustillantes préparées avec passion et des ingrédients frais.</p>
+        <div class="services">
+            <div class="service-badge">
+                <span>Livraison</span>
+            </div>
+            <a th:href="@{/menu}" class="service-badge">
+                <span>À Emporter</span>
+            </a>
+        </div>
+    </div>
+    <div class="scroll-indicator"></div>
+</section>
+
+<!-- Section Horaires -->
+<section id="horaires" class="horaires-section">
+    <div class="horaires-container">
+        <h2 class="horaires-title">Horaire D'ouverture</h2>
+        <div class="horaires-grid">
+            <div class="horaire-item">
+                <span class="jour">Lundi</span>
+                <span class="heures">11:30-14:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Mardi</span>
+                <span class="heures">11:30-14:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Mercredi</span>
+                <span class="heures">11:30-14:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Jeudi</span>
+                <span class="heures">11:30-18:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Vendredi</span>
+                <span class="heures">11:30-14:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item">
+                <span class="jour">Samedi</span>
+                <span class="heures">11:30-14:00 & 18:00-21:00</span>
+            </div>
+            <div class="horaire-item dimanche">
+                <span class="jour">Dimanche</span>
+                <span class="heures">18:00-21:00</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

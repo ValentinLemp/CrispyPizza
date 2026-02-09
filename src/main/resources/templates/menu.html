@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Menu</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<!-- Menu Categories -->
+<nav class="menu-nav">
+    <ul class="menu-categories">
+        <li><a href="#pizza" class="menu-link active">PIZZA</a></li>
+        <li><a href="#pains" class="menu-link">PAINS</a></li>
+        <li><a href="#pates" class="menu-link">PÂTES</a></li>
+        <li><a href="#salades" class="menu-link">SALADES</a></li>
+        <li><a href="#snacking" class="menu-link">SNACKING</a></li>
+        <li><a href="#boissons" class="menu-link">BOISSONS</a></li>
+        <li><a href="#desserts" class="menu-link">DESSERTS</a></li>
+        <li><a href="#promo" class="menu-link">PROMO</a></li>
+    </ul>
+</nav>
+
+<!-- ------------------Pizza------------------ -->
+<div id="pizza" class="menu-section" style="display: block;">
+    <fieldset id="pizza-traditionnelle" class="produit-fieldset">
+        <legend>Pizza Traditionnelle</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${produit.typePizza != null && produit.typePizza.id == 1 && produit.estSuggestion == false}">
+                <img class="produit-img" th:src="${produit.urlImage}">
+                <h3 class="produit-name" th:text="${produit.libelle}"></h3>
+                <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset id="pizza-special" class="produit-fieldset">
+        <legend>Pizza Spécial</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${produit.typePizza != null && produit.typePizza.id == 2}">
+                <img class="produit-img" th:src="${produit.urlImage}">
+                <h3 class="produit-name" th:text="${produit.libelle}"></h3>
+                <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset id="pizza-blanche" class="produit-fieldset">
+        <legend>Pizza Blanche</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${produit.typePizza != null && produit.typePizza.id == 3}">
+                <img class="produit-img" th:src="${produit.urlImage}">
+                <h3 class="produit-name" th:text="${produit.libelle}"></h3>
+                <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset id="pizza-mer" class="produit-fieldset">
+        <legend>Pizza de la mer</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${produit.typePizza != null && produit.typePizza.id == 4}">
+                <img class="produit-img" th:src="${produit.urlImage}">
+                <h3 class="produit-name" th:text="${produit.libelle}"></h3>
+                <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Pizza (affiché seulement s'il y a des suggestions) -->
+    <fieldset id="pizza-suggestion" class="produit-fieldset" th:if="${#lists.size(produitPizzas.?[typePizza == null && estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${roduit.estSuggestion == true}">
+                <img class="produit-img" th:src="${produit.urlImage}">
+                <h3 class="produit-name" th:text="${produit.libelle}"></h3>
+                <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset id="pizza-du-mois" class="produit-fieldset">
+        <legend>Pizza du mois</legend>
+        <div class="pizza-mois-content">
+            <p class="pizza-mois-text">Découvrez et admirez la pizza du mois en allant sur la page Facebook de Crispy Pizza</p>
+            <div class="pizza-mois-links">
+                <a href="https://www.facebook.com/CrispyPizzaRamillies/" class="pizza-mois-link" target="_blank">Facebook Ramillies</a>
+                <a href="https://www.facebook.com/people/Crispy-pizza-Meux/61583618507080/" class="pizza-mois-link" target="_blank">Facebook Meux</a>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+
+<!-- ------------------Pain------------------ -->
+<div id="pains" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Pains</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitPains}" th:if="${produit.estSuggestion == false}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Pains -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitPains.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitPains}" th:if="${produit.estSuggestion == true}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Pate------------------ -->
+<div id="pates" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Pâtes</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitPates}" th:if="${produit.estSuggestion == false}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Pâtes -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitPates.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitPates}" th:if="${produit.estSuggestion == true}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Salade------------------ -->
+<div id="salades" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Salades</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitSalades}" th:if="${produit.estSuggestion == false}">
+                <div>
+                    <img class="produit-img" th:src="${produit.getUrlImage()}">
+                    <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                    <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                    <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                    <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Salades -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitSalades.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitSalades}" th:if="${produit.estSuggestion == true}">
+                <div>
+                    <img class="produit-img" th:src="${produit.getUrlImage()}">
+                    <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                    <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                    <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                    <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Snacking------------------ -->
+<div id="snacking" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Snacking</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitSnackings}" th:if="${produit.estSuggestion == false}">
+                    <img class="produit-img" th:src="${produit.getUrlImage()}">
+                    <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                    <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                    <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                    <button class="btn-ajouter" th:data-label="${produit.libelle}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Snacking -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitSnackings.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitSnackings}" th:if="${produit.estSuggestion == true}">
+                    <img class="produit-img" th:src="${produit.getUrlImage()}">
+                    <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                    <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                    <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                    <button class="btn-ajouter" th:data-label="${produit.libelle}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Boisson------------------ -->
+<div id="boissons" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Boissons</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitBoissons}" th:if="${produit.estSuggestion == false}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.centilitre}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Boissons -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitBoissons.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitBoissons}" th:if="${produit.estSuggestion == true}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.centilitre}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-id="${produit.id}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Dessert------------------ -->
+<div id="desserts" class="menu-section" style="display: none;">
+    <fieldset class="produit-fieldset">
+        <legend>Desserts</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitDesserts}" th:if="${produit.estSuggestion == false}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-label="${produit.libelle}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+    <!-- Fieldset Suggestions Desserts -->
+    <fieldset class="produit-fieldset" th:if="${#lists.size(produitDesserts.?[estSuggestion == true]) > 0}">
+        <legend>Suggestions</legend>
+        <div class="produit-grid">
+            <div class="produit-card" th:each ="produit : ${produitDesserts}" th:if="${produit.estSuggestion == true}">
+                <img class="produit-img" th:src="${produit.getUrlImage()}">
+                <p class="produit-name" th:text="${produit.getLibelle()}"></p>
+                <p class="produit-desc" th:text="${produit.getDescription() != null ? produit.getDescription():''}"></p>
+                <p class="produit-prix" th:text="${menuService.affichePrix(produit.prix)}"></p>
+                <button class="btn-ajouter" th:data-label="${produit.libelle}">Ajouter</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- ------------------Promo------------------ -->
+<div id="promo" class="menu-section" style="display: none;">
+    <div class="promo-card promo-highlight">
+        <p class="promo-title">10 plats achetés = 12€ de réduction</p>
+    </div>
+    <p class="promo-note">*plats = pizza, pâte, salades</p>
+    <div class="promo-card">
+        <p class="promo-subtitle">Carte de fidélité</p>
+        <p class="promo-text">Profitez de notre carte de fidélité où 12€ de réduction s'applique pour le 10ème plat (pour une valeur inférieure ou égale à 11,00€ / cette offre est valable uniquement sur l'emporté et non cumulable aux autres promotions)</p>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-produit" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title">Nom du produit</h2>
+            <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <img id="modal-img" class="modal-product-img" src="" alt="Produit">
+            <p id="modal-desc" class="modal-product-desc"></p>
+
+            <!-- Options pour pizza -->
+            <div id="modal-options-pizza" class="modal-option" style="display: none;">
+                <label class="modal-option-label">Taille</label>
+                <div class="modal-option-group">
+                    <button type="button" class="modal-option-btn selected" data-taille="medium">Medium</button>
+                    <button type="button" class="modal-option-btn" data-taille="large">Large</button>
+                </div>
+            </div>
+
+            <div id="modal-options-gratiner" class="modal-option" style="display: none;">
+                <label class="modal-option-label">Gratiner ?</label>
+                <div class="modal-option-group">
+                    <button type="button" class="modal-option-btn selected" data-gratiner="non">Non</button>
+                    <button type="button" class="modal-option-btn" data-gratiner="oui">Oui (+1.50€)</button>
+                </div>
+            </div>
+
+            <!-- Options pour pâtes (type de pâte) -->
+            <div id="modal-options-pate" class="modal-option" style="display: none;">
+                <label class="modal-option-label">Type de pâte</label>
+                <div class="modal-option-group">
+                    <button type="button" class="modal-option-btn selected" data-typepate="Rigatoni" data-prixpate="0">Rigatoni</button>
+                    <button type="button" class="modal-option-btn" data-typepate="Spaghetti" data-prixpate="0">Spaghetti</button>
+                    <button type="button" class="modal-option-btn" data-typepate="Tagliatelle" data-prixpate="1">Tagliatelle (+1€)</button>
+                    <button type="button" class="modal-option-btn" id="btn-tortellini" data-typepate="Tortellini" data-prixpate="1">Tortellini (+1€)</button>
+                </div>
+            </div>
+
+            <!-- Options pour snacking (plusieurs quantités) -->
+            <div id="modal-options-portion" class="modal-option" style="display: none;">
+                <label class="modal-option-label">Portion</label>
+                <div id="modal-portion-group" class="modal-option-group">
+                    <!-- Les boutons seront générés dynamiquement -->
+                </div>
+            </div>
+
+            <!-- Quantité -->
+            <div class="modal-quantity">
+                <button type="button" class="modal-quantity-btn" id="btn-moins">-</button>
+                <span class="modal-quantity-value" id="quantite">1</span>
+                <button type="button" class="modal-quantity-btn" id="btn-plus">+</button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="modal-total">
+                Total: <span class="modal-total-price" id="modal-total">0€</span>
+            </div>
+            <button type="button" class="modal-add-btn" id="btn-ajouter-panier">Ajouter au panier</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">Produit ajouté au panier !</div>
+
+<script>
+    // Navigation du menu
+    document.querySelectorAll('.menu-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var targetId = this.getAttribute('href').substring(1);
+
+            document.querySelectorAll('.menu-section').forEach(function(section) {
+                section.style.display = 'none';
+            });
+
+            document.querySelectorAll('.menu-link').forEach(function(l) {
+                l.classList.remove('active');
+            });
+
+            var section = document.getElementById(targetId);
+            if (section) {
+                section.style.display = 'block';
+            }
+
+            this.classList.add('active');
+        });
+    });
+
+    // Variables pour le modal
+    let produitActuel = null;
+    let quantite = 1;
+    let tailleLarge = false;
+    let gratiner = false;
+    let typePate = 'Rigatoni';
+    let prixPate = 0;
+
+    const modal = document.getElementById('modal-produit');
+    const modalTitle = document.getElementById('modal-title');
+    const modalImg = document.getElementById('modal-img');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalTotal = document.getElementById('modal-total');
+    const quantiteSpan = document.getElementById('quantite');
+    const optionsPizza = document.getElementById('modal-options-pizza');
+    const optionsGratiner = document.getElementById('modal-options-gratiner');
+    const optionsPate = document.getElementById('modal-options-pate');
+    const optionsPortion = document.getElementById('modal-options-portion');
+    const portionGroup = document.getElementById('modal-portion-group');
+    let produitsListe = []; // Pour stocker la liste des produits (snacking)
+
+    // Ouvrir le modal au clic sur "Ajouter"
+    document.querySelectorAll('.btn-ajouter').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            // Appel API pour récupérer le produit
+            if(this.getAttribute('data-id'))
+            {
+                const produitId = this.getAttribute('data-id');
+                fetch('/api/produit/id/' + produitId)
+                    .then(response => response.json())
+                    .then(produit => {
+                        produitActuel = produit;
+                        quantite = 1;
+                        tailleLarge = false;
+                        gratiner = false;
+                        prixPate = 0;
+
+                        // Remplir le modal
+                        modalTitle.textContent = produit.libelle;
+                        modalImg.src = produit.urlImage;
+                        // Si description existe et n'est pas vide, l'afficher. Sinon afficher centilitre. Sinon rien.
+                        let desc = '';
+                        if (produit.description && produit.description.trim() !== '') {
+                            desc = produit.description;
+                        } else if (produit.centilitre && produit.centilitre.trim() !== '') {
+                            desc = produit.centilitre;
+                        }
+                        modalDesc.textContent = desc;
+                        quantiteSpan.textContent = quantite;
+
+                        // Cacher toutes les options par défaut
+                        optionsPortion.style.display = 'none';
+                        optionsPizza.style.display = 'none';
+                        optionsPate.style.display = 'none';
+                        optionsGratiner.style.display = 'none';
+
+                        // Afficher options selon le type de produit
+                        if (produit.typeProduit) {
+                            // Pizza (id=1) : taille Medium/Large
+                            if (produit.typeProduit.id === 1 && produit.prixLarge) {
+                                optionsPizza.style.display = 'block';
+                                document.querySelectorAll('[data-taille]').forEach(b => b.classList.remove('selected'));
+                                document.querySelector('[data-taille="medium"]').classList.add('selected');
+                                tailleLarge = false;
+                            }
+
+                            // Pâtes (id=2) : type de pâte + gratiner
+                            if (produit.typeProduit.id === 2) {
+                                optionsPate.style.display = 'block';
+                                document.querySelectorAll('[data-typepate]').forEach(b => b.classList.remove('selected'));
+                                document.querySelector('[data-typepate="Rigatoni"]').classList.add('selected');
+                                typePate = 'Rigatoni';
+                                prixPate = 0;
+
+                                // Tortellini uniquement pour jambon creme et tomate creme
+                                const btnTortellini = document.getElementById('btn-tortellini');
+                                const libelleLower = produit.libelle.toLowerCase();
+                                if (libelleLower.includes('jambon') || libelleLower.includes('tomate')) {
+                                    btnTortellini.style.display = 'inline-block';
+                                } else {
+                                    btnTortellini.style.display = 'none';
+                                }
+
+                                optionsGratiner.style.display = 'block';
+                                document.querySelectorAll('[data-gratiner]').forEach(b => b.classList.remove('selected'));
+                                document.querySelector('[data-gratiner="non"]').classList.add('selected');
+                                gratiner = false;
+                            }
+                        }
+
+                        calculerTotal();
+                        modal.classList.add('active');
+
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+            else
+            {
+                const produitLabel = this.getAttribute('data-label');
+                fetch('/api/produit/libelle/' + produitLabel)
+                    .then(response => response.json())
+                    .then(produits => {
+                        produitsListe = produits;
+                        quantite = 1;
+                        prixPate = 0;
+                        gratiner = false;
+
+                        // Prendre le premier produit pour les infos de base
+                        let premierProduit = produits[0];
+                        produitActuel = premierProduit;
+
+                        // Remplir le modal
+                        modalTitle.textContent = premierProduit.libelle;
+                        modalImg.src = premierProduit.urlImage;
+                        modalDesc.textContent = premierProduit.description || '';
+                        quantiteSpan.textContent = quantite;
+
+                        // Cacher les options pizza/gratiner/pate
+                        optionsPizza.style.display = 'none';
+                        optionsGratiner.style.display = 'none';
+                        optionsPate.style.display = 'none';
+
+                        // Générer les boutons de portion si plusieurs produits
+                        if (produits.length > 1) {
+                            optionsPortion.style.display = 'block';
+                            portionGroup.innerHTML = ''; // Vider les anciens boutons
+
+                            produits.forEach((p, index) => {
+                                let btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.className = 'modal-option-btn' + (index === 0 ? ' selected' : '');
+                                btn.setAttribute('data-portion-index', index);
+                                btn.textContent = p.quantite + ' pcs - ' + p.prix + '€';
+                                btn.addEventListener('click', function() {
+                                    document.querySelectorAll('[data-portion-index]').forEach(b => b.classList.remove('selected'));
+                                    this.classList.add('selected');
+                                    produitActuel = produitsListe[index];
+                                    calculerTotal();
+                                });
+                                portionGroup.appendChild(btn);
+                            });
+                        } else {
+                            optionsPortion.style.display = 'none';
+                        }
+
+                        calculerTotal();
+                        modal.classList.add('active');
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+
+        });
+    });
+
+    // Fermer le modal
+    document.getElementById('modal-close').addEventListener('click', function() {
+        modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+
+    // Boutons + et -
+    document.getElementById('btn-plus').addEventListener('click', function() {
+        quantite++;
+        quantiteSpan.textContent = quantite;
+        calculerTotal();
+    });
+
+    document.getElementById('btn-moins').addEventListener('click', function() {
+        if (quantite > 1) {
+            quantite--;
+            quantiteSpan.textContent = quantite;
+            calculerTotal();
+        }
+    });
+
+    // Sélection taille
+    document.querySelectorAll('[data-taille]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('[data-taille]').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            tailleLarge = this.getAttribute('data-taille') === 'large';
+            calculerTotal();
+        });
+    });
+
+    // Sélection gratiner
+    document.querySelectorAll('[data-gratiner]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('[data-gratiner]').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            gratiner = this.getAttribute('data-gratiner') === 'oui';
+            calculerTotal();
+        });
+    });
+
+    // Sélection type de pâte
+    document.querySelectorAll('[data-typepate]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('[data-typepate]').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            typePate = this.getAttribute('data-typepate');
+            prixPate = parseFloat(this.getAttribute('data-prixpate')) || 0;
+            calculerTotal();
+        });
+    });
+
+    // Calculer le total
+    function calculerTotal() {
+        if (!produitActuel) return;
+
+        let prix = tailleLarge && produitActuel.prixLarge ? produitActuel.prixLarge : produitActuel.prix;
+        if (gratiner) prix += 1.5;
+        prix += prixPate;
+        let total = prix * quantite;
+
+        modalTotal.textContent = total.toFixed(2).replace('.00', '') + '€';
+    }
+
+    // Ajouter au panier
+    document.getElementById('btn-ajouter-panier').addEventListener('click', function() {
+        if (!produitActuel) return;
+
+        // Calculer le prix unitaire
+        let prixUnitaire = tailleLarge && produitActuel.prixLarge ? produitActuel.prixLarge : produitActuel.prix;
+        if (gratiner) prixUnitaire += 1.5;
+        prixUnitaire += prixPate;
+
+        // Déterminer la taille/portion à afficher
+        let tailleAffichee = '';
+        if (produitActuel.quantite) {
+            // Snacking avec pièces
+            tailleAffichee = produitActuel.quantite + ' pièces';
+        } else if (produitActuel.typeProduit && produitActuel.typeProduit.id === 1 && produitActuel.prixLarge) {
+            // Pizza avec taille
+            tailleAffichee = tailleLarge ? 'Large' : 'Medium';
+        } else if (produitActuel.typeProduit && produitActuel.typeProduit.id === 2) {
+            // Pâtes avec type de pâte
+            tailleAffichee = typePate;
+        } else {
+            // Autres produits (boissons, desserts, etc.)
+            tailleAffichee = '';
+        }
+
+        // Créer l'objet pour le panier
+        let itemPanier = {
+            id: produitActuel.id,
+            nom: produitActuel.libelle,
+            description: produitActuel.description || '',
+            prixUnitaire: prixUnitaire,
+            prixBase: produitActuel.prix,
+            quantite: quantite,
+            taille: tailleAffichee,
+            gratiner: gratiner,
+            urlImage: produitActuel.urlImage,
+            typeProduitId: produitActuel.typeProduit ? produitActuel.typeProduit.id : null,
+            isLarge: tailleLarge,
+            ingredientsAjoutes: [],
+            ingredientsEnleves: []
+        };
+
+        // Récupérer le panier existant ou créer un nouveau
+        let panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+
+        // Vérifier si le même produit (avec mêmes options) existe déjà
+        let indexExistant = panier.findIndex(item =>
+            item.id === itemPanier.id &&
+            item.taille === itemPanier.taille &&
+            item.gratiner === itemPanier.gratiner
+        );
+
+        if (indexExistant !== -1) {
+            // Ajouter à la quantité existante
+            panier[indexExistant].quantite += quantite;
+        } else {
+            // Ajouter comme nouvel article
+            panier.push(itemPanier);
+        }
+
+        // Sauvegarder dans sessionStorage
+        sessionStorage.setItem('panier', JSON.stringify(panier));
+
+        // Fermer le modal
+        modal.classList.remove('active');
+
+        // Afficher le toast
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+
+        // Cacher après 2 secondes
+        setTimeout(function() {
+            toast.classList.remove('show');
+        }, 2000);
+
+        // Mettre à jour le compteur du panier
+        mettreAJourCompteurPanier();
+    });
+</script>
+
+</body>
+</html>

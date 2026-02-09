@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Navbar Fragment -->
+<nav class="navbar" th:fragment="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <div class="logo">
+                <img th:src="@{/images/logoTemplate.png}" alt="CrispyPizza Logo">
+            </div>
+            <a href="tel:081340258" class="phone-link">081/340.258</a>
+        </div>
+        <ul class="nav-menu">
+            <li><a th:href="@{/home}" class="nav-link" th:classappend="${currentPage == 'home'} ? 'active' : ''">Accueil</a></li>
+            <li><a th:href="@{/home#horaires}" class="nav-link" th:classappend="${currentPage == 'horaires'} ? 'active' : ''">Horaires</a></li>
+            <li><a th:href="@{/menu}" class="nav-link" th:classappend="${currentPage == 'menu'} ? 'active' : ''">Menu</a></li>
+            <li><a th:href="@{/livraison}" class="nav-link" th:classappend="${currentPage == 'livraison'} ? 'active' : ''">Livraison</a></li>
+            <li>
+                <a th:href="@{/panier}" class="nav-link panier-link" th:classappend="${currentPage == 'panier'} ? 'active' : ''">
+                    Panier
+                    <span id="panier-compteur" class="panier-badge">0</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

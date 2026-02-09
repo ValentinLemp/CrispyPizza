@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Panier</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/panier.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="panier-container">
+    <h1 class="panier-title">Mon Panier</h1>
+
+    <!-- Panier vide -->
+    <div id="panier-vide" class="panier-vide" style="display: none;">
+        <div class="panier-vide-icon">🛒</div>
+        <p class="panier-vide-text">Votre panier est vide</p>
+        <a th:href="@{/menu}" class="btn-menu">Voir le menu</a>
+    </div>
+
+    <!-- Liste des articles -->
+    <div id="panier-liste" class="panier-liste"></div>
+
+    <!-- Footer avec total et boutons -->
+    <div id="panier-footer" class="panier-footer" style="display: none;">
+        <div class="panier-total">
+            <div id="promo-plats" class="promo-plats" style="display: none;">
+                <span class="promo-plats-label">Promo 10 plats</span>
+                <span class="promo-plats-reduction">-12€</span>
+            </div>
+            <div class="panier-total-row">
+                <span class="panier-total-label">Total</span>
+                <span id="panier-total-prix" class="panier-total-prix">0€</span>
+            </div>
+        </div>
+        <div class="panier-actions">
+            <button id="btn-vider" class="btn-vider">Vider le panier</button>
+            <button id="btn-commander" class="btn-commander">Commander</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Restaurant Fermé -->
+<div id="modal-ferme" class="modal-overlay">
+    <div class="modal-content modal-ferme-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Restaurant fermé</h2>
+            <button class="modal-close" id="modal-ferme-close">&times;</button>
+        </div>
+        <div class="modal-body" style="text-align: center; padding: 1.5rem;">
+            <p style="color: var(--pizza-white); font-size: 1.1rem; margin-bottom: 1rem;">
+                Désolé, le restaurant est actuellement fermé.
+            </p>
+            <p style="color: var(--pizza-gray); font-size: 0.95rem;">
+                Consultez nos horaires d'ouverture sur la page d'accueil.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ingrédients -->
+<div id="modal-ingredients" class="modal-overlay">
+    <div class="modal-content modal-ingredients-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Modifier les ingrédients</h2>
+            <button class="modal-close" id="modal-ingredients-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="ingredients-section">
+                <h3 class="ingredients-section-title">Enlever des ingrédients</h3>
+                <div id="ingredients-enlever" class="ingredients-grid"></div>
+            </div>
+            <div class="ingredients-section">
+                <h3 class="ingredients-section-title">Ajouter des ingrédients</h3>
+                <div id="ingredients-ajouter" class="ingredients-grid"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-add-btn" id="btn-valider-ingredients">Valider</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentItemIndex = null;
+    let ingredientsDisponibles = [];
+    let ingredientsAjoutesTemp = [];
+    let ingredientsEnlevesTemp = [];
+
+    // Charger et afficher le panier
+    function afficherPanier() {
+        const panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+        const liste = document.getElementById('panier-liste');
+        const panierVide = document.getElementById('panier-vide');
+        const panierFooter = document.getElementById('panier-footer');
+
+        liste.innerHTML = '';
+
+        if (panier.length === 0) {
+            panierVide.style.display = 'block';
+            panierFooter.style.display = 'none';
+            return;
+        }
+
+        panierVide.style.display = 'none';
+        panierFooter.style.display = 'block';
+
+        panier.forEach((item, index) => {
+            // Construire la taille à afficher
+            let tailleText = '';
+            if (item.taille && item.taille !== '') {
+                tailleText = item.taille;
+            }
+            if (item.gratiner) {
+                tailleText += (tailleText ? '<br>' : '') + 'Gratiné';
+            }
+
+            // Afficher le lien ingrédients pour pizza (1), pâtes (2), salades (3)
+            let ingredientsLink = '';
+            if (item.typeProduitId === 1 || item.typeProduitId === 2 || item.typeProduitId === 3) {
+                ingredientsLink = `<a href="#" class="btn-ingredients" data-index="${index}">enlever/ajouter des ungrédients</a>`;
+            }
+
+            // Afficher les ingrédients modifiés
+            let ingredientsModifies = '';
+            if (item.ingredientsEnleves && item.ingredientsEnleves.length > 0) {
+                item.ingredientsEnleves.forEach(ing => {
+                    ingredientsModifies += `<span class="ingredient-ss">SS ${ing.libelle}</span>`;
+                });
+            }
+            if (item.ingredientsAjoutes && item.ingredientsAjoutes.length > 0) {
+                item.ingredientsAjoutes.forEach(ing => {
+                    ingredientsModifies += `<span class="ingredient-supp">Supp ${ing.libelle}</span>`;
+                });
+            }
+
+            // Calculer le prix avec les suppléments
+            let prixTotal = item.prixUnitaire;
+            if (item.ingredientsAjoutes && item.ingredientsAjoutes.length > 0) {
+                item.ingredientsAjoutes.forEach(ing => {
+                    prixTotal += ing.prix;
+                });
+            }
+
+            const itemHtml = `
+                <div class="panier-item" data-index="${index}">
+                    <img class="panier-item-img" src="${item.urlImage}" alt="${item.nom}">
+                    <div class="panier-item-details">
+                        <div class="panier-item-nom">${item.nom}</div>
+                        ${ingredientsLink}
+                        ${ingredientsModifies ? '<div class="panier-item-ingredients">' + ingredientsModifies + '</div>' : ''}
+                    </div>
+                    <div class="panier-item-taille">${tailleText}</div>
+                    <div class="panier-item-quantite">
+                        <button class="panier-qty-btn btn-moins" data-index="${index}">-</button>
+                        <span class="panier-qty-value">${item.quantite}</span>
+                        <button class="panier-qty-btn btn-plus" data-index="${index}">+</button>
+                    </div>
+                    <div class="panier-item-prix">${(prixTotal * item.quantite).toFixed(2).replace('.00', '')}€</div>
+                    <button class="panier-item-supprimer" data-index="${index}">&times;</button>
+                </div>
+            `;
+            liste.innerHTML += itemHtml;
+        });
+
+        // Calculer et afficher le total
+        calculerTotal();
+
+        // Ajouter les événements
+        ajouterEvenements();
+    }
+
+    // Calculer le total
+    function calculerTotal() {
+        const panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+        let total = 0;
+        let nbPlatsEligibles = 0;
+
+        panier.forEach(item => {
+            let prixItem = item.prixUnitaire;
+            if (item.ingredientsAjoutes && item.ingredientsAjoutes.length > 0) {
+                item.ingredientsAjoutes.forEach(ing => {
+                    prixItem += ing.prix;
+                });
+            }
+            total += prixItem * item.quantite;
+
+            // Compter les plats éligibles (pizza=1, pâte=2, salade=3)
+            if (item.typeProduitId === 1 || item.typeProduitId === 2 || item.typeProduitId === 3) {
+                nbPlatsEligibles += item.quantite;
+            }
+        });
+
+        // Appliquer la réduction si 10 plats ou plus
+        const promoDiv = document.getElementById('promo-plats');
+        if (nbPlatsEligibles >= 10) {
+            total -= 12;
+            if (total < 0) total = 0;
+            promoDiv.style.display = 'flex';
+            sessionStorage.setItem('promoPlatsActif', 'true');
+        } else {
+            promoDiv.style.display = 'none';
+            sessionStorage.setItem('promoPlatsActif', 'false');
+        }
+
+        document.getElementById('panier-total-prix').textContent = total.toFixed(2).replace('.00', '') + '€';
+        sessionStorage.setItem('panierTotal', total.toFixed(2));
+    }
+
+    // Ajouter les événements aux boutons
+    function ajouterEvenements() {
+        // Boutons + et -
+        document.querySelectorAll('.btn-plus').forEach(btn => {
+            btn.addEventListener('click', function() {
+                modifierQuantite(parseInt(this.dataset.index), 1);
+            });
+        });
+
+        document.querySelectorAll('.btn-moins').forEach(btn => {
+            btn.addEventListener('click', function() {
+                modifierQuantite(parseInt(this.dataset.index), -1);
+            });
+        });
+
+        // Bouton supprimer
+        document.querySelectorAll('.panier-item-supprimer').forEach(btn => {
+            btn.addEventListener('click', function() {
+                supprimerArticle(parseInt(this.dataset.index));
+            });
+        });
+
+        // Bouton modifier ingrédients
+        document.querySelectorAll('.btn-ingredients').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                ouvrirModalIngredients(parseInt(this.dataset.index));
+            });
+        });
+    }
+
+    // Ouvrir le modal des ingrédients
+    function ouvrirModalIngredients(index) {
+        currentItemIndex = index;
+        const panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+        const item = panier[index];
+
+        // Copier les ingrédients actuels
+        ingredientsAjoutesTemp = item.ingredientsAjoutes ? [...item.ingredientsAjoutes] : [];
+        ingredientsEnlevesTemp = item.ingredientsEnleves ? [...item.ingredientsEnleves] : [];
+
+        // Déterminer le type pour l'API
+        let apiUrl = '';
+        if (item.typeProduitId === 1) {
+            apiUrl = '/api/ingredient/pizza';
+        } else if (item.typeProduitId === 2) {
+            apiUrl = '/api/ingredient/pate';
+        } else if (item.typeProduitId === 3) {
+            apiUrl = '/api/ingredient/salade';
+        }
+
+        // Charger les ingrédients
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(ingredients => {
+                ingredientsDisponibles = ingredients;
+                afficherIngredients(item);
+                document.getElementById('modal-ingredients').classList.add('active');
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+
+    // Afficher les ingrédients dans le modal
+    function afficherIngredients(item) {
+        const enleverDiv = document.getElementById('ingredients-enlever');
+        const ajouterDiv = document.getElementById('ingredients-ajouter');
+
+        enleverDiv.innerHTML = '';
+        ajouterDiv.innerHTML = '';
+
+        // Parser la description pour obtenir les ingrédients du produit
+        let ingredientsDuProduit = [];
+        if (item.description) {
+            ingredientsDuProduit = item.description
+                .split(',')
+                .map(ing => ing.trim())
+                .filter(ing => ing.length > 0);
+        }
+
+        // Afficher les ingrédients à enlever directement depuis la description
+        ingredientsDuProduit.forEach((ingNom, index) => {
+            const isEnleve = ingredientsEnlevesTemp.some(e => e.libelle.toLowerCase() === ingNom.toLowerCase());
+            const btn = document.createElement('button');
+            btn.className = 'ingredient-btn' + (isEnleve ? ' selected' : '');
+            btn.textContent = ingNom;
+            btn.dataset.id = 'desc_' + index;
+            btn.addEventListener('click', function() {
+                toggleIngredientEnleveFromDesc(ingNom);
+                this.classList.toggle('selected');
+            });
+            enleverDiv.appendChild(btn);
+        });
+
+        // Message si aucun ingrédient à enlever
+        if (ingredientsDuProduit.length === 0) {
+            enleverDiv.innerHTML = '<p style="color: var(--pizza-gray); font-size: 0.9rem;">Aucun ingrédient à enlever</p>';
+        }
+
+        // Grouper les ingrédients par catégorie
+        const parCategorie = {};
+        ingredientsDisponibles.forEach(ing => {
+            const cat = ing.categorieIngredient ? ing.categorieIngredient.libelle : 'Autres';
+            if (!parCategorie[cat]) parCategorie[cat] = [];
+            parCategorie[cat].push(ing);
+        });
+
+        // Afficher les ingrédients à ajouter par catégorie
+        Object.keys(parCategorie).forEach(cat => {
+            // Titre de la catégorie
+            const catTitle = document.createElement('div');
+            catTitle.className = 'ingredient-categorie-title';
+            catTitle.textContent = cat;
+            ajouterDiv.appendChild(catTitle);
+
+            // Container pour les boutons de cette catégorie
+            const catContainer = document.createElement('div');
+            catContainer.className = 'ingredient-categorie-btns';
+
+            parCategorie[cat].forEach(ing => {
+                const isAjoute = ingredientsAjoutesTemp.some(a => a.id === ing.id);
+                const prix = item.isLarge ? ing.prixLarge : ing.prixMedium;
+                const btn = document.createElement('button');
+                btn.className = 'ingredient-btn' + (isAjoute ? ' selected' : '');
+                btn.textContent = ing.libelle + ' (+' + prix.toFixed(2).replace('.00', '') + '€)';
+                btn.dataset.id = ing.id;
+                btn.dataset.prix = prix;
+                btn.addEventListener('click', function() {
+                    toggleIngredientAjoute(ing, prix);
+                    this.classList.toggle('selected');
+                });
+                catContainer.appendChild(btn);
+            });
+
+            ajouterDiv.appendChild(catContainer);
+        });
+    }
+
+    // Toggle ingrédient à enlever (depuis la description)
+    function toggleIngredientEnleveFromDesc(ingNom) {
+        const index = ingredientsEnlevesTemp.findIndex(e => e.libelle.toLowerCase() === ingNom.toLowerCase());
+        if (index === -1) {
+            ingredientsEnlevesTemp.push({ id: null, libelle: ingNom });
+        } else {
+            ingredientsEnlevesTemp.splice(index, 1);
+        }
+    }
+
+    // Toggle ingrédient à ajouter
+    function toggleIngredientAjoute(ing, prix) {
+        const index = ingredientsAjoutesTemp.findIndex(a => a.id === ing.id);
+        if (index === -1) {
+            ingredientsAjoutesTemp.push({ id: ing.id, libelle: ing.libelle, prix: prix });
+        } else {
+            ingredientsAjoutesTemp.splice(index, 1);
+        }
+    }
+
+    // Valider les ingrédients
+    document.getElementById('btn-valider-ingredients').addEventListener('click', function() {
+        let panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+
+        if (panier[currentItemIndex]) {
+            panier[currentItemIndex].ingredientsAjoutes = ingredientsAjoutesTemp;
+            panier[currentItemIndex].ingredientsEnleves = ingredientsEnlevesTemp;
+            sessionStorage.setItem('panier', JSON.stringify(panier));
+        }
+
+        document.getElementById('modal-ingredients').classList.remove('active');
+        afficherPanier();
+    });
+
+    // Fermer le modal
+    document.getElementById('modal-ingredients-close').addEventListener('click', function() {
+        document.getElementById('modal-ingredients').classList.remove('active');
+    });
+
+    document.getElementById('modal-ingredients').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+        }
+    });
+
+    // Modifier la quantité d'un article
+    function modifierQuantite(index, delta) {
+        let panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+
+        if (panier[index]) {
+            panier[index].quantite += delta;
+
+            if (panier[index].quantite <= 0) {
+                panier.splice(index, 1);
+            }
+
+            sessionStorage.setItem('panier', JSON.stringify(panier));
+            afficherPanier();
+            mettreAJourCompteurPanier();
+        }
+    }
+
+    // Supprimer un article
+    function supprimerArticle(index) {
+        let panier = JSON.parse(sessionStorage.getItem('panier')) || [];
+        panier.splice(index, 1);
+        sessionStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+        mettreAJourCompteurPanier();
+    }
+
+    // Vider le panier
+    document.getElementById('btn-vider').addEventListener('click', function() {
+        sessionStorage.removeItem('panier');
+        afficherPanier();
+        mettreAJourCompteurPanier();
+    });
+
+    // Horaires d'ouverture (deux créneaux par jour: midi et soir)
+    // Format: jour (0=dimanche, 1=lundi, ..., 6=samedi) => tableau de créneaux
+    const horaires = {
+        0: [{ ouverture: '18:00', fermeture: '21:00' }],  // Dimanche - soir uniquement
+        1: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Lundi
+        2: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mardi
+        3: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mercredi
+        4: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Jeudi
+        5: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Vendredi
+        6: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }]   // Samedi
+    };
+
+    // Vérifier si le restaurant est ouvert
+    function estOuvert() {
+        const now = new Date();
+        const jour = now.getDay();
+        const heureActuelle = now.getHours() * 60 + now.getMinutes();
+
+        const creneaux = horaires[jour];
+        if (!creneaux || creneaux.length === 0) return false;
+
+        return creneaux.some(creneau => {
+            const [hOuv, mOuv] = creneau.ouverture.split(':').map(Number);
+            const [hFerm, mFerm] = creneau.fermeture.split(':').map(Number);
+            const ouverture = hOuv * 60 + mOuv;
+            const fermeture = hFerm * 60 + mFerm;
+            return heureActuelle >= ouverture && heureActuelle < fermeture;
+        });
+    }
+
+    // Bouton commander
+    document.getElementById('btn-commander').addEventListener('click', function() {
+        if (estOuvert()) {
+            window.location.href = '/commande';
+        } else {
+            document.getElementById('modal-ferme').classList.add('active');
+        }
+    });
+
+    // Fermer le modal "fermé"
+    document.getElementById('modal-ferme-close').addEventListener('click', function() {
+        document.getElementById('modal-ferme').classList.remove('active');
+    });
+
+    document.getElementById('modal-ferme').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+        }
+    });
+
+    // Charger le panier au démarrage
+    document.addEventListener('DOMContentLoaded', afficherPanier);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --pizza-yellow: #F2B705;
+    --pizza-yellow-dark: #D9A404;
+    --pizza-red: #C41E3A;
+    --pizza-red-dark: #A01830;
+    --pizza-gray: #6B6B6B;
+    --pizza-gray-dark: #3D3D3D;
+    --pizza-black: #1A1A1A;
+    --pizza-white: #F5F5F5;
+    --pizza-cream: #E8E8E8;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    background-color: var(--pizza-gray-dark);
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(135deg, var(--pizza-black), var(--pizza-gray-dark));
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.navbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pizza-yellow), var(--pizza-red), var(--pizza-yellow));
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo .logo-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--pizza-yellow), var(--pizza-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar .logo {
+    flex-direction: row;
+    margin-bottom: 0;
+    animation: none;
+}
+
+.navbar .logo h1,
+.navbar .logo span {
+    display: none;
+}
+
+.navbar .logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 10px rgba(242, 183, 5, 0.3);
+    border: 2px solid var(--pizza-yellow);
+    animation: none;
+}
+
+.phone-link {
+    text-decoration: none;
+    color: var(--pizza-yellow);
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    background: transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.phone-link:hover {
+    background: var(--pizza-yellow);
+    color: var(--pizza-black);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--pizza-white);
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pizza-yellow), var(--pizza-red));
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--pizza-yellow);
+}
+
+/* Panier Badge */
+.panier-link {
+    position: relative;
+}
+
+.panier-badge {
+    position: absolute;
+    top: -10px;
+    right: -15px;
+    background: var(--pizza-red);
+    color: var(--pizza-white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+}
+
+.panier-badge.show {
+    display: flex;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    .nav-menu {
+        gap: 1rem;
+    }
+
+    .nav-link {
+        font-size: 1rem;
+    }
+}

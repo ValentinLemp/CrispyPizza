@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Paiement annulé</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="payment-container">
+    <div class="payment-card cancel">
+        <div class="payment-icon">✕</div>
+        <h1>Paiement annulé</h1>
+        <p>Votre paiement a été annulé.</p>
+        <p>Votre panier a été conservé.</p>
+        <div class="payment-actions">
+            <a href="/panier" class="btn-panier">Retour au panier</a>
+            <a href="/home" class="btn-home-secondary">Retour à l'accueil</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-container {
+        padding-top: 150px;
+        padding-bottom: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+
+    .payment-card {
+        background: var(--pizza-black);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        max-width: 500px;
+        border: 2px solid var(--pizza-red);
+    }
+
+    .payment-card.cancel .payment-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--pizza-red);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .payment-card h1 {
+        color: var(--pizza-red);
+        margin-bottom: 1rem;
+    }
+
+    .payment-card p {
+        color: var(--pizza-white);
+        margin-bottom: 0.5rem;
+    }
+
+    .payment-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-panier {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--pizza-yellow), var(--pizza-yellow-dark));
+        color: var(--pizza-black);
+        text-decoration: none;
+        padding: 0.8rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-panier:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(242, 183, 5, 0.4);
+    }
+
+    .btn-home-secondary {
+        display: inline-block;
+        background: transparent;
+        border: 2px solid var(--pizza-gray);
+        color: var(--pizza-white);
+        text-decoration: none;
+        padding: 0.8rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-home-secondary:hover {
+        border-color: var(--pizza-yellow);
+        color: var(--pizza-yellow);
+    }
+</style>
+
+</body>
+</html>

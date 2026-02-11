@@ -23,8 +23,10 @@
         <h2>Bienvenue!</h2>
         <p>Savourez l'authenticité de la cuisine italienne avec nos pizzas croustillantes préparées avec passion et des ingrédients frais.</p>
         <div class="services">
-            <div class="service-badge">
-                <span>Livraison</span>
+            <div>
+                <a th:href="@{/livraison}" class="service-badge">
+                    <span>Livraison</span>
+                </a>
             </div>
             <a th:href="@{/menu}" class="service-badge">
                 <span>À Emporter</span>

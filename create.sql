@@ -75,40 +75,32 @@ create table restaurant(
     foreign key (idAdresse) references adresse
 );
 
-create table typePayement
-(
-    id serial primary key,
-    libelle varchar(20) not null
-);
-
 create table statut(
     id serial PRIMARY KEY,
     libelle varchar(15)
 );
 create table commande(
     id serial PRIMARY KEY,
+    nom varchar(25),
+    prenom varchar(25),
     estLivraison boolean not null ,
-    dateHeure varchar(20) not null ,
-    estPayer boolean not null ,
+    dateHeure TimeStamp not null ,
     prixTotal double precision not null,
     commetaire varchar(255),
-    idrestaurant integer not null,
+    idRestaurant integer not null,
     foreign key (idrestaurant) references restaurant,
-    idstatut integer not null,
+    idStatut integer not null,
     FOREIGN KEY (idstatut) REFERENCES statut,
     idClient integer,
-    foreign key (idClient) references client,
-    idTypePayement integer,
-    foreign key (idTypePayement) references typepayement
+    foreign key (idClient) references client
 );
 
 create table ligneCommande(
     id serial primary key,
-    quantiteLigne int not null,
     prixLigne double precision not null,
-    estGratiner boolean,
     tailleMedium boolean,
     typePate varchar(20),
+    note varchar(50),
     idProduit integer,
     foreign key (idProduit) references produit,
     idCommande integer,
@@ -128,7 +120,14 @@ create table utilisateur(
     id serial primary key,
     motdepasse VARCHAR(10),
     idResraurent integer,
-    foreign key (idResraurent) references restaurant
+    foreign key (idResraurent) references restaurant,
+    modeAdmin BOOLEAN not null
+);
+
+CREATE TABLE produitIngredient (
+    idProduit INTEGER NOT NULL,
+    libelle VARCHAR(100) NOT NULL,
+    foreign key (idProduit) references produit
 );
 -- ========================================
 -- INSERTION
@@ -402,13 +401,87 @@ INSERT INTO ingredient(libelle, prixmedium, prixlarge, forPizza, forPate, forSal
 
 INSERT INTO statut(libelle) VALUES
 ('Encours'),
-('Fini');
+('Cloturé');
 
-INSERT INTO typePayement(libelle) VALUES
-('Cash'),
-('Bancontact');
+INSERT INTO utilisateur(motdepasse, idResraurent, modeAdmin) VALUES
+('11111', 1, false),
+('22222', 2, false),
+('12345', 1, true);
 
-INSERT INTO utilisateur(motdepasse) VALUES
-('11111'),
-('22222'),
-('12345');
+INSERT INTO produitIngredient (idProduit, libelle) VALUES
+(1, 'sauce tomate'), (1, 'mozzarella'), (1, 'origan'),
+(2, 'sauce tomate'), (2, 'mozzarella fior di latte'), (2, 'pesto'), (2, 'tomates fraîches'), (2, 'parmesan rapé'), (2, 'origan'),
+(3, 'sauce tomate'), (3, 'mozzarella'), (3, 'champignons'), (3, 'origan'),
+(4, 'sauce tomate'), (4, 'mozzarella'), (4, 'salami'), (4, 'origan'),
+(5, 'sauce tomate'), (5, 'mozzarella'), (5, 'jambon'), (5, 'origan'),
+(6, 'sauce tomate'), (6, 'mozzarella'), (6, 'anchois'), (6, 'câpres'), (6, 'origan'),
+(7, 'sauce tomate'), (7, 'mozzarella'), (7, 'chorizo'), (7, 'origan'),
+(8, 'pizza fermée'), (8, 'sauce tomate'), (8, 'mozzarella'), (8, 'jambon'), (8, 'champignons'), (8, 'oeufs durs'),
+(9, 'sauce tomate'), (9, 'mozzarella'), (9, 'jambon'), (9, 'champignons'), (9, 'origan'),
+(10, 'sauce tomate'), (10, 'mozzarella'), (10, 'jambon'), (10, 'oeuf cru'), (10, 'origan'),
+(11, 'sauce bolognaise pur boeuf'), (11, 'mozzarella'), (11, 'parmesan rapé'), (11, 'origan'),
+(12, 'sauce tomate'), (12, 'mozzarella'), (12, 'aubergines'), (12, 'parmesan'), (12, 'origan'),
+(13, 'sauce tomate'), (13, 'mozzarella'), (13, 'jambon'), (13, 'champignons'), (13, 'oeufs durs'), (13, 'origan'),
+(14, 'sauce tomate'), (14, 'mozzarella'), (14, 'jambon'), (14, 'ananas'), (14, 'origan'),
+(15, 'sauce tomate'), (15, 'mozzarella'), (15, 'anchois'), (15, 'olives'), (15, 'câpres'), (15, 'poivrons'), (15, 'origan'),
+(16, 'sauce tomate'), (16, 'mozzarella'), (16, 'chorizo'), (16, 'poivrons'), (16, 'origan'),
+(17, 'sauce tomate'), (17, 'mozzarella'), (17, 'artichauts'), (17, 'olives'), (17, 'jambon'), (17, 'champignons'), (17, 'origan'),
+(18, 'sauce tomate'), (18, 'mozzarella'), (18, 'taleggio'), (18, 'gorgonzola'), (18, 'parmesan'), (18, 'origan'),
+(19, 'sauce tomate'), (19, 'mozzarella'), (19, 'lardons'), (19, 'champignons'), (19, 'oignons'), (19, 'ail'), (19, 'origan'),
+(20, 'sauce tomate'), (20, 'mozzarella'), (20, 'jambon'), (20, 'poivrons'), (20, 'oeufs durs'), (20, 'anchois'), (20, 'ail'), (20, 'origan'),
+(21, 'sauce tomate'), (21, 'mozzarella'), (21, 'chèvre'), (21, 'noix'), (21, 'miel'), (21, 'origan'),
+(22, 'sauce tomate'), (22, 'mozzarella'), (22, 'champignons'), (22, 'oignons'), (22, 'poivrons'), (22, 'artichauts'), (22, 'olives'), (22, 'origan'),
+(23, 'sauce tomate'), (23, 'mozzarella'), (23, 'courgettes'), (23, 'reblochon'), (23, 'lardons'), (23, 'oignons'), (23, 'origan'),
+(24, 'sauce tomate'), (24, 'mozzarella'), (24, 'aubergines'), (24, 'oignons'), (24, 'taleggio'), (24, 'parmesan'), (24, 'origan'),
+(25, 'sauce tomate'), (25, 'mozzarella'), (25, 'ricotta'), (25, 'tomates fraîches'), (25, 'oignons rouge'), (25, 'pesto'), (25, 'origan'),
+(26, 'sauce tomate'), (26, 'mozzarella'), (26, '4 fromages'), (26, 'oignons'), (26, 'bresaola'), (26, 'origan'),
+(27, 'sauce tomate'), (27, 'mozzarella'), (27, 'carpaccio'), (27, 'roquette'), (27, 'copeaux de parmesan'), (27, 'tomates confites'), (27, 'balsamique'), (27, 'origan'),
+(28, 'sauce tomate'), (28, 'mozzarella'), (28, 'gorgonzola'), (28, 'lardons'), (28, 'poires'), (28, 'oignons'), (28, 'origan'),
+(29, 'sauce tomate'), (29, 'mozzarella'), (29, 'parme'), (29, 'roquette'), (29, 'copeaux de parmesan'), (29, 'tomates confites'), (29, 'balsamique'), (29, 'origan'),
+(30, 'sauce tomate'), (30, 'mozzarella'), (30, 'chorizo'), (30, 'poulet'), (30, 'oignons rouges'), (30, 'poivrons'), (30, 'pili-pili'), (30, 'origan'),
+(31, 'sauce tomate'), (31, 'mozzarella'), (31, 'merguez'), (31, 'oignons'), (31, 'feta'), (31, 'origan'),
+(32, 'sauce tomate'), (32, 'mozzarella'), (32, 'poulet'), (32, 'haché pur boeuf'), (32, 'merguez'), (32, 'tomates fraîches'), (32, 'sauce poivre'), (32, 'origan'),
+(33, 'sauce tomate'), (33, 'mozzarella'), (33, 'lardons'), (33, 'pommes de terre'), (33, 'reblochon'), (33, 'oignons'), (33, 'origan'),
+(34, 'sauce tomate'), (34, 'mozzarella'), (34, 'poulet'), (34, 'oignons rouge'), (34, 'parmesan'), (34, 'sauce barbecue'), (34, 'origan'),
+(35, 'sauce tomate'), (35, 'mozzarella'), (35, 'pesto'), (35, 'roquette'), (35, 'burrata'), (35, 'tomates fraîches'), (35, 'balsamique'), (35, 'origan'),
+(36, 'sauce tomate'), (36, 'mozzarella'), (36, 'poulet'), (36, 'ananas'), (36, 'tomates fraîches'), (36, 'sauce curry'), (36, 'origan'),
+(37, 'sauce tomate'), (37, 'mozzarella'), (37, 'kebab'), (37, 'tomates fraîches'), (37, 'oignons'), (37, 'sauce à l''ail'), (37, 'origan'),
+(38, 'sauce tomate'), (38, 'mozzarella'), (38, 'hamburger'), (38, 'cheddar'), (38, 'oignons frits'), (38, 'cornichons'), (38, 'sauce bicky'), (38, 'origan'),
+(39, 'sauce tomate'), (39, 'mozzarella'), (39, 'émincé de boeuf'), (39, 'oignons rouge'), (39, 'tomates fraîches'), (39, 'sauce poivre'), (39, 'origan'),
+(40, 'sauce tomate'), (40, 'mozzarella'), (40, 'jambon'), (40, 'lardons'), (40, 'oignons'), (40, 'poivrons'), (40, 'sauce barbecue'), (40, 'origan'),
+(41, 'sauce tomate'), (41, 'mozzarella'), (41, 'pesto rouge piquant'), (41, 'merguez'), (41, 'chorizo'), (41, 'poivrons'), (41, 'oignons rouges'), (41, 'origan'),
+(42, 'sauce tomate'), (42, 'mozzarella'), (42, 'poulet'), (42, 'lardons'), (42, 'oignons rouge'), (42, 'poivrons'), (42, 'sauce jammie'), (42, 'origan'),
+(43, 'sauce tomate'), (43, 'mozzarella'), (43, 'merguez'), (43, 'jambon'), (43, 'lardons'), (43, 'salami'), (43, 'oignons'), (43, 'champignons'), (43, 'origan'),
+(44, 'crème'), (44, 'mozzarella'), (44, 'parmesan'), (44, 'origan'),
+(45, 'crème'), (45, 'mozzarella'), (45, 'jambon'), (45, 'champignons'), (45, 'origan'),
+(46, 'crème'), (46, 'mozzarella'), (46, 'épinards'), (46, 'gorgonzola'), (46, 'lardons'), (46, 'origan'),
+(47, 'crème'), (47, 'mozzarella'), (47, 'pommes de terre'), (47, 'lardons'), (47, 'chèvre'), (47, 'origan'),
+(48, 'crème'), (48, 'mozzarella'), (48, 'gorgonzola'), (48, 'taleggio'), (48, 'parmesan'), (48, 'emmental'), (48, 'cheddar'), (48, 'reblochon'), (48, 'ricotta'), (48, 'origan'),
+(49, 'crème'), (49, 'mozzarella'), (49, 'poulet'), (49, 'oignons rouge'), (49, 'courgettes'), (49, 'sauce poivre'), (49, 'origan'),
+(50, 'crème'), (50, 'mozzarella'), (50, 'jambon'), (50, 'champignons'), (50, 'crème de truffes'), (50, 'roquette'), (50, 'origan'),
+(51, 'crème'), (51, 'mozzarella'), (51, 'crème de pistache'), (51, 'jambon'), (51, 'burrata'), (51, 'brisures de pistache'), (51, 'origan'),
+(52, 'sauce tomate'), (52, 'mozzarella'), (52, 'thon'), (52, 'oignons rouge'), (52, 'olives'), (52, 'origan'),
+(53, 'sauce tomate'), (53, 'mozzarella'), (53, 'fruits de mer marinés'), (53, 'ail'), (53, 'origan'),
+(54, 'sauce tomate'), (54, 'mozzarella'), (54, 'saumon'), (54, 'oignons frais'), (54, 'citron'), (54, 'origan'),
+(55, 'sauce tomate'), (55, 'mozzarella'), (55, 'scampis marinés'), (55, 'tomates fraîches'), (55, 'ail'), (55, 'origan'),
+(56, 'sauce tomate'), (56, 'mozzarella'), (56, 'fruits de mer'), (56, 'saumon'), (56, 'scampis'), (56, 'ail'), (56, 'origan'),
+(57, 'sauce tomate'), (57, 'mozzarella'), (57, 'scampis'), (57, 'saumon'), (57, 'ail'), (57, 'origan'),
+(58, 'sauce tomate'), (58, 'mozzarella'), (58, 'thon'), (58, 'olives'), (58, 'oignons'), (58, 'poivrons'), (58, 'câpres'), (58, 'fêta'), (58, 'origan'),
+(65, 'sauce tomate'), (65, 'crème'),
+(66, 'crème'), (66, 'dés de jambon'), (66, 'muscade'),
+(67, 'sauce tomate'), (67, 'ail'), (67, 'oignons'), (67, 'olives'), (67, 'pili-pili'),
+(68, 'crème'), (68, 'lardons'),
+(69, 'crème'), (69, 'pesto'),
+(70, 'sauce bolognaise pur boeuf'),
+(71, 'sauce 4 fromage'),
+(72, 'sauce tomate'), (72, 'crème'), (72, '4 fromage'), (72, 'jambon'),
+(73, 'crème'), (73, 'poulet'), (73, 'champignons'),
+(74, 'sauce tomate'), (74, 'crème'), (74, 'lardons'), (74, 'champignons'),
+(75, 'crème'), (75, 'chorizo'), (75, 'oignons rouge'), (75, 'pili-pili'), (75, 'tomates cerise'), (75, 'ricotta'), (75, 'persil'),
+(76, 'sauce tomate'), (76, 'aubergines'), (76, 'ail'), (76, 'lardons'), (76, 'basilic'), (76, 'oignons'),
+(77, 'sauce tomate'), (77, 'crème'), (77, 'scampis'), (77, 'ail'), (77, 'basilic'),
+(78, 'crème'), (78, 'saumon'), (78, 'ciboulette'),
+(79, 'sauce tomate'), (79, 'crème'), (79, 'haché'), (79, 'épinards'), (79, 'graines de fenouille'),
+(80, 'crème'), (80, 'ricotta'), (80, 'champignons'), (80, 'huile de truffles'), (80, 'parmesan'),
+(81, 'crème'), (81, 'lardons'), (81, 'pâtes de pistaches'), (81, 'oignons'),
+(82, 'ricotta fraîche'), (82, 'épinards'), (82, 'sauce tomate'), (82, 'crème'), (82, 'mozzarella gratinée');

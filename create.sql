@@ -60,19 +60,22 @@ create table adresse(
     localite varchar(25) not null
 );
 
+create table restaurant(
+                           id serial primary key,
+                           nom varchar(20) not null,
+                           idAdresse integer not null,
+                           foreign key (idAdresse) references adresse
+);
+
 create table client(
     id serial primary key,
     nom varchar(25) not null,
     prenom varchar(25),
     numero varchar(15) not null,
     idAdresse integer not null,
-    foreign key (idAdresse) references adresse
-);
-create table restaurant(
-    id serial primary key,
-    nom varchar(20) not null,
-    idAdresse integer not null,
-    foreign key (idAdresse) references adresse
+    foreign key (idAdresse) references adresse,
+    idRestaurant INTEGER not null,
+    foreign key (idAdresse) references restaurant
 );
 
 create table statut(
@@ -97,8 +100,8 @@ create table commande(
 
 create table ligneCommande(
     id serial primary key,
-    prixLigne double precision not null,
-    tailleMedium boolean,
+    prixProduit double precision not null,
+    tailleLarge boolean,
     typePate varchar(20),
     note varchar(50),
     idProduit integer,
@@ -118,11 +121,31 @@ create table ligneIngrediant
 create table utilisateur(
     id serial primary key,
     motdepasse VARCHAR(10),
-    idResraurent integer,
-    foreign key (idResraurent) references restaurant,
+    idRestaurant integer,
+    foreign key (idRestaurant) references restaurant,
     modeAdmin BOOLEAN not null
 );
 
+create table cloture(
+    id serial PRIMARY KEY,
+    date Date,
+    argentRestaurant double precision,
+    argentInternet double precision,
+    argentCarte double precision,
+    argentLiquide double precision,
+    argentDifference double precision,
+    nbMaxiPizza int,
+    nbPizza int,
+    nbPâte int,
+    nbPain int,
+    nbSalade int,
+    nbSnacking int,
+    nbBoisson int,
+    nbDessert int,
+    nbDipy int,
+    idRestaurant integer NOT NULL,
+    foreign key (idRestaurant) references restaurant
+);
 -- ========================================
 -- INSERTION
 -- ========================================
@@ -394,10 +417,12 @@ INSERT INTO ingredient(libelle, prixmedium, prixlarge, forPizza, forPate, forSal
 ('sauce curry', 1, 2, true, false, false, 6);
 
 INSERT INTO statut(libelle) VALUES
-('Encours'),
+('Restaurant'),
+('Internet'),
 ('Cloturé');
 
-INSERT INTO utilisateur(motdepasse, idResraurent, modeAdmin) VALUES
+INSERT INTO utilisateur(motdepasse, idRestaurant, modeAdmin) VALUES
 ('11111', 1, false),
 ('22222', 2, false),
-('12345', 1, true);
+('12345', 1, true),
+('12345', 2, true);

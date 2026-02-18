@@ -287,7 +287,7 @@
             ingredientsDuProduit = item.description
                 .split(',')
                 .map(ing => ing.trim())
-                .filter(ing => ing.length > 0);
+                .filter(ing => ing.length > 0 && ing.toLowerCase() !== 'pizza fermée');
         }
 
         // Afficher les ingrédients à enlever directement depuis la description

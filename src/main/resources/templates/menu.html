@@ -83,7 +83,7 @@
     <fieldset id="pizza-suggestion" class="produit-fieldset" th:if="${#lists.size(produitPizzas.?[typePizza == null && estSuggestion == true]) > 0}">
         <legend>Suggestions</legend>
         <div class="produit-grid">
-            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${roduit.estSuggestion == true}">
+            <div class="produit-card" th:each="produit : ${produitPizzas}" th:if="${produit.estSuggestion == true}">
                 <img class="produit-img" th:src="${produit.urlImage}">
                 <h3 class="produit-name" th:text="${produit.libelle}"></h3>
                 <p class="produit-desc" th:text="${produit.description != null ? produit.description : ''}"></p>
@@ -453,19 +453,27 @@
 
                             // Pâtes (id=2) : type de pâte + gratiner
                             if (produit.typeProduit.id === 2) {
-                                optionsPate.style.display = 'block';
-                                document.querySelectorAll('[data-typepate]').forEach(b => b.classList.remove('selected'));
-                                document.querySelector('[data-typepate="Rigatoni"]').classList.add('selected');
-                                typePate = 'Rigatoni';
-                                prixPate = 0;
-
-                                // Tortellini uniquement pour jambon creme et tomate creme
-                                const btnTortellini = document.getElementById('btn-tortellini');
                                 const libelleLower = produit.libelle.toLowerCase();
-                                if (libelleLower.includes('jambon') || libelleLower.includes('tomate')) {
-                                    btnTortellini.style.display = 'inline-block';
+
+                                // Cannelloni : pas de choix de type de pâte, juste gratiner
+                                if (libelleLower.includes('canneloni')) {
+                                    optionsPate.style.display = 'none';
+                                    typePate = '';
+                                    prixPate = 0;
                                 } else {
-                                    btnTortellini.style.display = 'none';
+                                    optionsPate.style.display = 'block';
+                                    document.querySelectorAll('[data-typepate]').forEach(b => b.classList.remove('selected'));
+                                    document.querySelector('[data-typepate="Rigatoni"]').classList.add('selected');
+                                    typePate = 'Rigatoni';
+                                    prixPate = 0;
+
+                                    // Tortellini uniquement pour jambon creme et tomate creme
+                                    const btnTortellini = document.getElementById('btn-tortellini');
+                                    if (libelleLower.includes('jambon') || libelleLower.includes('tomate')) {
+                                        btnTortellini.style.display = 'inline-block';
+                                    } else {
+                                        btnTortellini.style.display = 'none';
+                                    }
                                 }
 
                                 optionsGratiner.style.display = 'block';

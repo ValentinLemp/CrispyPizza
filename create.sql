@@ -95,7 +95,9 @@ create table commande(
     idStatut integer not null,
     FOREIGN KEY (idstatut) REFERENCES statut,
     idClient integer,
-    foreign key (idClient) references client
+    foreign key (idClient) references client,
+    estVu boolean not null,
+    estCloture boolean not null
 );
 
 create table ligneCommande(
@@ -128,21 +130,22 @@ create table utilisateur(
 
 create table cloture(
     id serial PRIMARY KEY,
-    date Date,
-    argentRestaurant double precision,
-    argentInternet double precision,
-    argentCarte double precision,
-    argentLiquide double precision,
-    argentDifference double precision,
-    nbMaxiPizza int,
-    nbPizza int,
-    nbPâte int,
-    nbPain int,
-    nbSalade int,
-    nbSnacking int,
-    nbBoisson int,
-    nbDessert int,
-    nbDipy int,
+    numeroCloture int not null,
+    date Date not null,
+    argentRestaurant double precision not null,
+    argentInternet double precision not null,
+    argentCarte double precision not null,
+    argentLiquide double precision not null,
+    argentDifference double precision not null,
+    nbMaxiPizza int not null,
+    nbPizza int not null,
+    nbPâte int not null,
+    nbPain int not null,
+    nbSalade int not null,
+    nbSnacking int not null,
+    nbBoisson int not null,
+    nbDessert int not null,
+    nbDipy int not null,
     idRestaurant integer NOT NULL,
     foreign key (idRestaurant) references restaurant
 );
@@ -259,7 +262,7 @@ INSERT INTO produit (libelle, description, quantite, prix, prixLarge, centilitre
 ('Al finicchio', 'sauce tomate, crème, haché, épinards, graines de fenouille', null, 13.5, null, null, '/images/pates/al-finicchio.png', null, 2, false),
 ('Boscaiola', 'crème, ricotta, champignons, huile de truffles, parmesan', null, 10.5, null, null, '/images/pates/boscaiola.png', null, 2, false),
 ('Siciliana', 'crème, lardons, pâtes de pistaches, oignons', null, 10.5, null, null, '/images/pates/siciliana.png', null, 2, false),
-('canneloni ricota', 'ricotta fraîche, épinards, sauce tomate, crème, mozzarella gratinée', null, 12.5, null, null, '/images/pates/canneloni-ricotta.png', null, 2, false),
+('Canneloni ricota', 'ricotta fraîche, épinards, sauce tomate, crème, mozzarella gratinée', null, 12.5, null, null, '/images/pates/canneloni-ricotta.png', null, 2, false),
 
 -- ==================== Salade ====================
 ('Caprèse', 'roquette, tomates fraîches, mozzarella fraîches, pesto, balsamique', null, 10.5, null, null, '/images/salades/caprèse.png', null, 3, false),
@@ -315,7 +318,7 @@ INSERT INTO produit (libelle, description, quantite, prix, prixLarge, centilitre
 
 INSERT INTO adresse(codePostal, nomRue, numeroRue, localite) VALUES
 (5081, 'Rue du chainia', '62', 'Meux'),
-(5081, 'Avenue des Déportés', '45A', 'Ramillies');
+(136, 'Avenue des Déportés', '45A', 'Ramillies');
 
 INSERT INTO restaurant(nom, idadresse) VALUES
 ('Meux', 1),

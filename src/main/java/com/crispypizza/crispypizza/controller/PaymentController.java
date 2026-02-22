@@ -1,7 +1,9 @@
 package com.crispypizza.crispypizza.controller;
 
+import com.crispypizza.crispypizza.service.CommandeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,9 @@ public class PaymentController {
 
     @Value("${mollie.api-key}")
     private String mollieApiKey;
+
+    @Autowired
+    private CommandeService commandeService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String MOLLIE_API_URL = "https://api.mollie.com/v2/payments";
@@ -57,7 +62,7 @@ public class PaymentController {
             mollieRequest.put("description", "Commande CrispyPizza");
             mollieRequest.put("redirectUrl", baseUrl + "/api/payment/success");
             mollieRequest.put("cancelUrl", baseUrl + "/api/payment/cancel");
-            mollieRequest.put("metadata", request);
+            mollieRequest.put("metadata", Map.of("restaurant", request.get("restaurant")));
 
             // Headers
             HttpHeaders headers = new HttpHeaders();
@@ -83,8 +88,9 @@ public class PaymentController {
 
             String paymentId = (String) mollieResponse.get("id");
 
-            // Stocker le payment ID dans la session
+            // Stocker le payment ID et les données de commande dans la session
             session.setAttribute("molliePaymentId", paymentId);
+            session.setAttribute("paymentData", request);
 
             Map<String, Object> result = new HashMap<>();
             result.put("checkoutUrl", checkoutUrl);
@@ -137,8 +143,15 @@ public class PaymentController {
 
             // Seulement afficher succès si le paiement est confirmé
             if ("paid".equals(status)) {
+                // Sauvegarder la commande dans le bon schéma
+                Map<String, Object> paymentData = (Map<String, Object>) session.getAttribute("paymentData");
+                if (paymentData != null) {
+                    commandeService.sauvegarderCommande(paymentData);
+                }
+
                 // Nettoyer la session
                 session.removeAttribute("molliePaymentId");
+                session.removeAttribute("paymentData");
                 return "payment-success";
             } else {
                 System.out.println("Statut non paid, redirection cancel");
@@ -176,7 +189,15 @@ public class PaymentController {
             String status = (String) payment.get("status");
 
             if ("paid".equals(status)) {
-                // TODO: Enregistrer la commande en base de données
+                // Récupérer les metadata de la commande depuis Mollie
+                Map<String, Object> metadata = (Map<String, Object>) payment.get("metadata");
+                if (metadata != null) {
+                    try {
+                        commandeService.sauvegarderCommande(metadata);
+                    } catch (Exception ex) {
+                        System.out.println("Commande déjà enregistrée ou erreur: " + ex.getMessage());
+                    }
+                }
                 System.out.println("Paiement réussi pour: " + paymentId);
             }
 

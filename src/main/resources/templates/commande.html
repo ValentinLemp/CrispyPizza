@@ -40,8 +40,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="numero">Numéro de téléphone <span class="required">*</span></label>
-                    <input type="tel" id="numero" name="numero" required maxlength="15" pattern="[0-9]{10}" placeholder="ex: 0482345678">
+                    <label for="numero">Numéro de téléphone</label>
+                    <input type="tel" id="numero" name="numero" maxlength="15" pattern="[0-9]{10}" placeholder="ex: 0482345678">
                 </div>
 
                 <div class="form-group">
@@ -81,7 +81,7 @@
 <script>
     // Horaires d'ouverture
     const horaires = {
-        0: [{ ouverture: '18:00', fermeture: '21:00' }],  // Dimanche - soir uniquement
+        0: [{ ouverture: '18:00', fermeture: '23:50' }],  // Dimanche - soir uniquement
         1: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Lundi
         2: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mardi
         3: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mercredi
@@ -172,7 +172,7 @@
             return;
         }
 
-        if (!numero || !/^[0-9]{10}$/.test(numero)) {
+        if (numero && !/^[0-9]{10}$/.test(numero)) {
             alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
             return;
         }

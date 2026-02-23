@@ -154,13 +154,10 @@ public class PaymentController {
                 session.removeAttribute("paymentData");
                 return "payment-success";
             } else {
-                System.out.println("Statut non paid, redirection cancel");
                 return "redirect:/api/payment/cancel";
             }
         } catch (Exception e) {
-            System.out.println("Erreur: " + e.getMessage());
-            e.printStackTrace();
-            return "redirect:/home";
+            return "redirect:/api/payment/cancel";
         }
     }
 

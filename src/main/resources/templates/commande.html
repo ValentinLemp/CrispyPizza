@@ -40,8 +40,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="numero">Numéro de téléphone</label>
-                    <input type="tel" id="numero" name="numero" maxlength="15" pattern="[0-9]{10}" placeholder="ex: 0482345678">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required maxlength="100" placeholder="ex: exemple@email.com">
                 </div>
 
                 <div class="form-group">
@@ -81,7 +81,7 @@
 <script>
     // Horaires d'ouverture
     const horaires = {
-        0: [{ ouverture: '18:00', fermeture: '23:50' }],  // Dimanche - soir uniquement
+        0: [{ ouverture: '18:00', fermeture: '21:00' }],  // Dimanche - soir uniquement
         1: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Lundi
         2: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mardi
         3: [{ ouverture: '11:30', fermeture: '14:00' }, { ouverture: '18:00', fermeture: '21:00' }],  // Mercredi
@@ -157,7 +157,7 @@
     function validerEtPayer() {
         const nom = document.getElementById('nom').value.trim();
         const prenom = document.getElementById('prenom').value.trim();
-        const numero = document.getElementById('numero').value.trim();
+        const email = document.getElementById('email').value.trim();
         const restaurant = document.getElementById('restaurant').value;
         const heure = document.getElementById('heure').value || null;
         const commentaire = document.getElementById('commentaire').value.trim();
@@ -172,8 +172,8 @@
             return;
         }
 
-        if (numero && !/^[0-9]{10}$/.test(numero)) {
-            alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
+        if (!email) {
+            alert('Veuillez entrer une adresse email.');
             return;
         }
 
@@ -203,7 +203,7 @@
         const paymentData = {
             nom: nom,
             prenom: prenom,
-            numero: numero,
+            email: email,
             restaurant: restaurant,
             heure: heure,
             commentaire: commentaire || null,
@@ -243,5 +243,6 @@
     });
 </script>
 
+<footer th:replace="~{fragments/header :: footer}"></footer>
 </body>
 </html>

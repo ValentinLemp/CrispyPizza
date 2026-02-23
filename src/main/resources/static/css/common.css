@@ -171,7 +171,33 @@ body {
     display: flex;
 }
 
-/* Responsive Navbar */
+/* Footer légal */
+.legal-footer {
+    background: var(--pizza-black);
+    border-top: 2px solid var(--pizza-yellow);
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.legal-footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.legal-footer-links a {
+    color: var(--pizza-gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.legal-footer-links a:hover {
+    color: var(--pizza-yellow);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     .nav-menu {
         gap: 1rem;
@@ -179,5 +205,10 @@ body {
 
     .nav-link {
         font-size: 1rem;
+    }
+
+    .legal-footer-links {
+        flex-direction: column;
+        gap: 0.8rem;
     }
 }

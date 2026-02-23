@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Conditions Générales de Vente</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/legal.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="legal-container">
+    <h1 class="legal-title">Conditions Générales de Vente</h1>
+
+    <div class="legal-section">
+        <h2>1. Objet</h2>
+        <p>Les présentes conditions générales de vente régissent les relations contractuelles entre Crispy Pizza et ses clients dans le cadre de la commande en ligne de produits alimentaires via le site web.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Commandes</h2>
+        <p>Le client passe commande via le site en sélectionnant ses produits, en choisissant le restaurant (Ramillies ou Meux) et en procédant au paiement en ligne.</p>
+        <p>La commande est confirmée une fois le paiement validé par le prestataire de paiement Mollie. Un récapitulatif est envoyé par email.</p>
+        <p>Crispy Pizza se réserve le droit de refuser toute commande pour un motif légitime (indisponibilité du produit, commande anormale, etc.).</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Prix</h2>
+        <p>Les prix sont indiqués en euros, toutes taxes comprises (TTC). Crispy Pizza se réserve le droit de modifier ses prix à tout moment. Les produits sont facturés sur la base des prix en vigueur au moment de la validation de la commande.</p>
+        <p>Les suppléments d'ingrédients sont clairement indiqués lors de la personnalisation des produits.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Paiement</h2>
+        <p>Le paiement s'effectue exclusivement en ligne via la plateforme sécurisée Mollie. Les moyens de paiement acceptés sont : carte bancaire (Visa, Mastercard), Bancontact et autres moyens proposés par Mollie.</p>
+        <p>Le paiement est débité au moment de la validation de la commande.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>5. Retrait des commandes</h2>
+        <p>Les commandes sont à retirer au restaurant sélectionné lors de la commande :</p>
+        <ul>
+            <li><strong>Crispy Pizza Ramillies :</strong> Avenue des Déportés 45A/7, 1367 Ramillies</li>
+            <li><strong>Crispy Pizza Meux :</strong> Rue du chainia 62, 5081 la Bruyère</li>
+        </ul>
+        <p>Le client est tenu de retirer sa commande à l'heure indiquée. Toute commande non retirée dans un délai raisonnable pourra être annulée sans remboursement.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>6. Droit de rétractation</h2>
+        <p>Conformément à l'article VI.53, 4° du Code de droit économique belge, le droit de rétractation ne s'applique pas aux denrées alimentaires périssables. Aucun remboursement ne pourra être effectué après la préparation de la commande.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>7. Réclamations</h2>
+        <p>Toute réclamation relative à une commande doit être adressée dans les 24 heures suivant le retrait au restaurant concerné ou par email à [À COMPLÉTER].</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>8. Responsabilité</h2>
+        <p>Crispy Pizza met tout en oeuvre pour assurer la qualité de ses produits et la disponibilité de son site. Crispy Pizza ne saurait être tenu responsable des dommages résultant d'une indisponibilité temporaire du site ou d'un retard dans le traitement de la commande.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>9. Allergènes</h2>
+        <p>Nos produits peuvent contenir des allergènes (gluten, lactose, fruits à coque, etc.). Pour toute question relative aux allergènes, veuillez contacter le restaurant avant de passer commande.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>10. Droit applicable</h2>
+        <p>Les présentes CGV sont soumises au droit belge. En cas de litige, les tribunaux de l'arrondissement judiciaire de Namur sont seuls compétents.</p>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/header :: footer}"></footer>
+</body>
+</html>

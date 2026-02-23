@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Politique de Confidentialité</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/legal.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="legal-container">
+    <h1 class="legal-title">Politique de Confidentialité</h1>
+
+    <div class="legal-section">
+        <h2>1. Responsable du traitement</h2>
+        <p><strong>Raison sociale :</strong> [À COMPLÉTER]</p>
+        <p><strong>Adresse :</strong> [À COMPLÉTER]</p>
+        <p><strong>Email :</strong> [À COMPLÉTER]</p>
+        <p><strong>Numéro BCE :</strong> [À COMPLÉTER]</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Données collectées</h2>
+        <p>Dans le cadre de la commande en ligne, nous collectons les données suivantes :</p>
+        <ul>
+            <li><strong>Nom et prénom</strong> : pour identifier la commande au moment du retrait</li>
+            <li><strong>Email</strong> : pour vous envoyer une preuve d'achat en cas de besoin lié à votre commande</li>
+        </ul>
+        <p>Aucune donnée bancaire n'est collectée ni stockée par Crispy Pizza. Les paiements sont gérés par Mollie, prestataire certifié PCI DSS.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Finalités du traitement</h2>
+        <p>Vos données personnelles sont utilisées exclusivement pour :</p>
+        <ul>
+            <li>Le traitement et la gestion de votre commande</li>
+            <li>La communication relative à votre commande (si numéro fourni)</li>
+        </ul>
+        <p>Vos données ne sont jamais utilisées à des fins publicitaires ou commerciales et ne sont jamais transmises à des tiers, à l'exception du prestataire de paiement Mollie dans le cadre strict du traitement de votre paiement.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Base juridique</h2>
+        <p>Le traitement de vos données repose sur l'exécution du contrat de vente (article 6.1.b du RGPD) : vos données sont nécessaires pour traiter et préparer votre commande.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>5. Durée de conservation</h2>
+        <p>Vos données de commande sont conservées pendant la durée nécessaire à la gestion de la commande et aux obligations légales et comptables (maximum 7 ans pour les données comptables conformément au droit belge).</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>6. Cookies et stockage local</h2>
+        <p>Notre site utilise :</p>
+        <ul>
+            <li><strong>Un cookie de session (JSESSIONID)</strong> : cookie technique strictement nécessaire au fonctionnement du site, utilisé pour gérer le processus de paiement. Il est automatiquement supprimé à la fermeture du navigateur.</li>
+            <li><strong>Le stockage de session du navigateur (sessionStorage)</strong> : utilisé pour stocker votre panier. Ces données restent uniquement dans votre navigateur et sont supprimées à la fermeture de l'onglet.</li>
+        </ul>
+        <p>Aucun cookie de tracking, publicitaire ou analytique n'est utilisé sur ce site.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>7. Vos droits</h2>
+        <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+        <ul>
+            <li><strong>Droit d'accès</strong> : obtenir une copie de vos données personnelles</li>
+            <li><strong>Droit de rectification</strong> : corriger des données inexactes</li>
+            <li><strong>Droit à l'effacement</strong> : demander la suppression de vos données</li>
+            <li><strong>Droit à la limitation du traitement</strong></li>
+            <li><strong>Droit d'opposition</strong></li>
+            <li><strong>Droit à la portabilité</strong> : recevoir vos données dans un format structuré</li>
+        </ul>
+        <p>Pour exercer ces droits, contactez-nous à : [À COMPLÉTER - email]</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>8. Réclamation</h2>
+        <p>Si vous estimez que le traitement de vos données n'est pas conforme, vous avez le droit d'introduire une réclamation auprès de l'Autorité de Protection des Données (APD) :</p>
+        <p>Autorité de Protection des Données<br>
+        Rue de la Presse, 35 - 1000 Bruxelles<br>
+        <a href="https://www.autoriteprotectiondonnees.be" target="_blank">www.autoriteprotectiondonnees.be</a></p>
+    </div>
+
+    <div class="legal-section">
+        <h2>9. Mise à jour</h2>
+        <p>La présente politique de confidentialité peut être mise à jour à tout moment. La date de dernière mise à jour est indiquée ci-dessous.</p>
+        <p><strong>Dernière mise à jour :</strong> Février 2026</p>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/header :: footer}"></footer>
+</body>
+</html>

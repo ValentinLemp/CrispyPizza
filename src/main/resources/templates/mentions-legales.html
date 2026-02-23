@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrispyPizza - Mentions Légales</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/legal.css}">
+    <script th:src="@{/js/panier.js}" defer></script>
+</head>
+<body>
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="legal-container">
+    <h1 class="legal-title">Mentions Légales</h1>
+
+    <div class="legal-section">
+        <h2>1. Identification de l'entreprise</h2>
+        <p><strong>Raison sociale :</strong> [À COMPLÉTER]</p>
+        <p><strong>Forme juridique :</strong> [À COMPLÉTER]</p>
+        <p><strong>Adresse du siège social :</strong> [À COMPLÉTER]</p>
+        <p><strong>Numéro BCE :</strong> [À COMPLÉTER]</p>
+        <p><strong>Numéro de TVA :</strong> BE1028813177</p>
+        <p><strong>Téléphone :</strong> 081/340.258</p>
+        <p><strong>Email :</strong> [À COMPLÉTER]</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Responsable de publication</h2>
+        <p><strong>Nom :</strong> [À COMPLÉTER]</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Hébergeur du site</h2>
+        <p><strong>Nom :</strong> [À COMPLÉTER]</p>
+        <p><strong>Adresse :</strong> [À COMPLÉTER]</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Propriété intellectuelle</h2>
+        <p>L'ensemble du contenu de ce site (textes, images, logo, etc.) est la propriété exclusive de Crispy Pizza ou de ses partenaires. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation écrite préalable est interdite.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>5. Autorisation AFSCA</h2>
+        <p><strong>Numéro d'agrément AFSCA :</strong> [À COMPLÉTER]</p>
+        <p>Crispy Pizza est enregistré auprès de l'Agence Fédérale pour la Sécurité de la Chaîne Alimentaire (AFSCA) conformément à la législation belge en vigueur.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>6. Paiement sécurisé</h2>
+        <p>Les paiements en ligne sont sécurisés par Mollie, prestataire de services de paiement certifié PCI DSS. Les données bancaires ne sont jamais stockées sur nos serveurs.</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>7. Litiges</h2>
+        <p>En cas de litige, le droit belge est applicable. Les tribunaux compétents sont ceux de l'arrondissement judiciaire de Namur.</p>
+        <p>Conformément à la réglementation européenne, vous pouvez également recourir à la plateforme de Règlement en Ligne des Litiges (RLL) : <a href="https://ec.europa.eu/consumers/odr" target="_blank">https://ec.europa.eu/consumers/odr</a></p>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/header :: footer}"></footer>
+</body>
+</html>
